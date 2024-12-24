@@ -21,6 +21,10 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'status',
+        'address',
+        'phone',
+        'image',
     ];
 
     /**
@@ -41,4 +45,22 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+   /**
+ * Get all of the Cart for the User
+ *
+ * @return \Illuminate\Database\Eloquent\Relations\HasMany
+ */
+
+ public function carts(){
+    return $this->hasMany(Cart::class);
+ }
+ public function orders(){
+    return $this->hasMany(Order::class);
+ }
+ public function wishlists(){
+    return $this->hasMany(Wishlist::class);
+ }
+
 }
+

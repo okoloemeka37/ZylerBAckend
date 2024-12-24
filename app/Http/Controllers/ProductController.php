@@ -3,9 +3,40 @@
 namespace App\Http\Controllers;
 use App\Models\Product;
 use Illuminate\Http\Request;
+use App\Models\State;
+use App\Models\Order;
+use App\Models\Wishlist;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Str;
+
+function uploadToGitHub($file)
+{
+    $fileName = Str::uuid() . '.' . $file->getClientOriginalExtension();
+    $fileContent = base64_encode(file_get_contents($file->getRealPath()));
+
+    $response = Http::withToken(env('GITHUB_TOKEN'))
+        ->put("https://api.github.com/repos/" . env('GITHUB_REPO') . "/contents/" . env('GITHUB_FOLDER') . "/$fileName", [
+            'message' => "Add $fileName",
+            'content' => $fileContent,
+            'branch' => env('GITHUB_BRANCH'),
+        ]);
+
+    if ($response->successful()) {
+        return $fileName; // Return the file URL
+    } else {
+        throw new Exception("Failed to upload file: " . $response->body());
+    }
+}
 
 class ProductController extends Controller
 {
+
+    public function getSum() {
+        $product=Product::orderBy('id','desc')->limit(1)->get('id');
+        $order=Order::orderBy('order_id','desc')->limit(1)->get('order_id');
+
+        return response()->json([$product,$order], 200);
+    }
 
 
     function getProduct($tag) {
@@ -13,10 +44,22 @@ class ProductController extends Controller
       return response()->json(['data'=>$product], 200);
       
     }
+    function getTagPro($tag) {
+        $product=Product::WHERE('tag','=',$tag)->get();
+      return response()->json(['data'=>$product], 200);
+      
+    }
+
+   
+    function getIndex() {
+        $product=Product::orderBy("id",'desc')->limit(20)->get();
+      return response()->json(['data'=>$product], 200);
+      
+    }
 
 
     function show($id) {
-        $product=Product::find($id);
+        $product=Product::where('id','=',$id)->with('cart')->get();
 if (!$product) {
     return response()->json(["data"=>"Product Not Found"], 404);
 }else{
@@ -26,33 +69,39 @@ if (!$product) {
        
     }
 
-
     public function store(Request $request){
-        $request->validate([
+     $request->validate([
             'name'=>"required",
             'Description'=>'required',
             'price'=>"required|numeric",
             'category'=>'required|string',
             'gender'=>'required|string',
             'tag'=>'required|string',
-            'stock'=>'required|numeric'
-        ]);
+            'stock'=>'required|numeric',
+            'images.*'=>'required'
+        ]); 
    try {
-    Product::create([
+    
+    $url=[];
+       foreach ($request->file('images') as $file) {    
+       $rt=uploadToGitHub($file);
+          array_push($url,$rt); // Return the file URL     
+       }
+   $implUrl=implode(',',$url);
+       Product::create([
         'name'=>$request['name'],
         'Description'=>$request['Description'],
         'price'=>$request['price'],
         'tag'=>$request['tag'],
         'category'=>$request['category'],
         'gender'=>$request['gender'],
-        'stock'=>$request['stock']
-    ]);
-
-
-    return response()->json(['message'=>"Product Added"], 200);
+        'stock'=>$request['stock'],
+        'image'=>$implUrl
+    ]); 
+    return response()->json(['message'=>"Product Added",'uploadfiles'=>$url], 200);
 
    } catch (\Exception $e) {
-    return response()->json(["message"=>"Something Went Wrong"], 500);
+    return response()->json(["message"=>$e], 500);
    }
     }
 
@@ -111,7 +160,7 @@ return response()->json(['data'=>$red], 200);
 
 
    public function indexGet($type)  {
-    $data=Product::where('category','=',$type)->orderBy('id','DESC')->get();
+    $data=Product::where('category','=',$type)->orderBy('id','DESC')->limit(5)->get();
     return response()->json(['data'=>$data], 200);
    }
 
@@ -119,6 +168,23 @@ return response()->json(['data'=>$red], 200);
    public function relatedPro($cat,$id)  {
 
     $data=Product::where('category','=','top')->where('id','!=',$id)->orderBy('id','DESC')->limit(5)->get();
-    return response()->json(['message'=>$data], 200,);
+    return response()->json(['data'=>$data], 200,);
    }
+
+  
+   //get states;
+
+ public  function getState()  {
+    
+    $data=State::get();
+    return response()->json($data, 200);
+   }
+
+   public function lifeSearch(Request $request)  {
+    $search=Product::where('name','like','%'.$request['search'].'%')
+                    ->orWhere('description','like','%'.$request['search'].'%')
+                    ->orWhere('tag','like','%'.$request['search'].'%')->orderBy('id','desc')->get();
+return response()->json($search, 200);
+   }
+   
 }

@@ -9,6 +9,13 @@ class Product extends Model
 {
     use HasFactory;
    protected $fillable=[
-    'name','Description','price','tag','stock','gender','category'
+    'name','Description','price','tag','stock','gender','category','image'
    ];
+
+   function cart(){
+    return $this->hasMany(Cart::class);
+   }
+   public function wishlists(){
+    return $this->hasMany(Wishlist::class);
+ }
 }
