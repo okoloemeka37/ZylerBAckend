@@ -93,7 +93,7 @@ Route::post('/logout', [Login::class, 'logout']);
 Route::get('/getState', [ProductController::class,'getState']);
 
 //order
-Route::post("/AddOrder",[OrderController::class,'add']);
+Route::post("/AddOrder/{ref}/{tran}",[OrderController::class,'add']);
 });
 
 
