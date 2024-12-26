@@ -9,6 +9,7 @@ use App\Http\Controllers\OrderController;
 use App\Http\Controllers\WishlistController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\PaymentController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -117,3 +118,15 @@ Route::get('/getNote', [NotificationController::class,'show']);
 Route::get("/getUser",[UserController::class,'get']);
 Route::post('/lifeSearch',[ProductController::class,'lifeSearch']);
 
+
+
+//payment
+
+Route::post('/pay', [App\Http\Controllers\PaymentController::class, 'redirectToGateway']);
+
+
+Route::get('/payment/callback', [App\Http\Controllers\PaymentController::class, 'handleGatewayCallback']);
+
+
+Route::post('/payment/initialize', [PaymentController::class, 'initializePayment']);
+Route::get('/payment/verify/{reference}', [PaymentController::class, 'verifyPayment']);
