@@ -8,13 +8,17 @@ use App\Models\Order;
 use App\Models\User;
 use App\Models\Product;
 use App\Mail\OrderMail;
+use App\Mail\PaymentUserMail;
+use App\Mail\AdminConfirmMail;
+
 use App\Models\notification;
+use App\Models\Payment;
 use Illuminate\Support\Facades\Mail;
 
 
 class OrderController extends Controller
 {
-  public  function add(Request $request)  {
+   public  function add(Request $request,$ref,$tran)  {
         $request->validate([
             'description'=>'required',
             'state'=>'required|string',
@@ -38,7 +42,12 @@ class OrderController extends Controller
             'status'=>'Pending',
             'total'=>$request['SubTotal']+  $request['delivery']      
         ]);  
-      
+      Payment::create([
+        'Amount'=>$request['SubTotal']+  $request['delivery'],
+        'PaymentReference'=>$ref,
+        'TransactioonID'=>$tran
+  
+      ]);
        $subTotal=$request['SubTotal'];
        $delivery=$request['delivery'];
   
@@ -52,14 +61,26 @@ class OrderController extends Controller
         $user->load('carts');
       
         
+        
+        
         Mail::to('okoloemeka47@gmail.com')->send(new OrderMail($rg));
+
+        Mail::to('okoloemeka47@gmail.com')->send(new PaymentUserMail($rg));
+
+        Mail::to('okoloemeka47@gmail.com')->send(new AdminConfirmMail($rg));
         
         //add to notice;
 
 notification::create([
   'type_id'=>$user->id,
   'notice'=>"A new Order Added",
-  'type'=>'User',
+  'type'=>'Order',
+  'view'=>'no'
+]);
+notification::create([
+  'type_id'=>$user->id,
+  'notice'=>"Payment confirmed",
+  'type'=>'Payment',
   'view'=>'no'
 ]);
 
