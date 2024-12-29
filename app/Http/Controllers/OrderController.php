@@ -30,6 +30,7 @@ class OrderController extends Controller
       $pt=$request['stock'];
       $rr=implode(" ",$pt);
       
+      Product::wherein('id',$pr)->delete();
         Order::create([
             'user_id'=>auth::user()->id,
             'product_ids'=>$rf,
