@@ -68,7 +68,8 @@ class Login extends Controller
         'password'=>Hash::make($request['password']),
         'status'=>'user',
         'address'=>$request['address'],
-        'phone'=>$request['phone']
+        'phone'=>$request['phone'],
+        'image'=>'05785d1e-eefc-47ed-9c3a-d6d3f127c4bd.jfif'
     ]);
 
     if (Auth::attempt($request->only('email', 'password'))) {

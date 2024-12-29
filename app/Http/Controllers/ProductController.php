@@ -103,7 +103,7 @@ if (!$product) {
     return response()->json(['message'=>"Product Added",'uploadfiles'=>$url], 200);
 
    } catch (\Exception $e) {
-    return response()->json(["message"=>$e], 500);
+    return response()->json(["message"=>"something"], 500);
    }
     }
 
