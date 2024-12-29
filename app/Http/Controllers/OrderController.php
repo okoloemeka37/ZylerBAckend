@@ -122,7 +122,7 @@ notification::create([
     $check->update([
       'status'=>$request['status']
     ]);
-    return response()->json(['message'=>"Status Upated"], 200);
+    return response()->json(['message'=>"Upated"], 200);
   }
 
 }

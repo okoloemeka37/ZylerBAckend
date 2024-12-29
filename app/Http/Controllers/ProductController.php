@@ -5,6 +5,7 @@ use App\Models\Product;
 use Illuminate\Http\Request;
 use App\Models\State;
 use App\Models\Order;
+use App\Models\User;
 use App\Models\Wishlist;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
@@ -34,8 +35,9 @@ class ProductController extends Controller
     public function getSum() {
         $product=Product::orderBy('id','desc')->limit(1)->get('id');
         $order=Order::orderBy('order_id','desc')->limit(1)->get('order_id');
+        $user=User::orderBy('id','desc')->limit(1)->get('id');
 
-        return response()->json([$product,$order], 200);
+        return response()->json([$product,$order,$user], 200);
     }
 
 
