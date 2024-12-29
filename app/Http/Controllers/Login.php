@@ -117,8 +117,10 @@ notification::create([
         $rt='';
         if (is_string($request['image'])) {
             $rt=$request['image'];
-        }else{ $file= $request->file('image');
-            $rt=uploadToGitHub($request->file('image'));}
+        }else{
+             $file= $request->file('image');
+            $rt=uploadToGitHub($request->file('image'));
+        }
        
            
        
