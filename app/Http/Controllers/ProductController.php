@@ -82,7 +82,7 @@ if (!$product) {
             'stock'=>'required|numeric',
             'images.*'=>'required'
         ]); 
-   try {
+
     
     $url=[];
        foreach ($request->file('images') as $file) {    
@@ -102,9 +102,7 @@ if (!$product) {
     ]); 
     return response()->json(['message'=>"Product Added",'uploadfiles'=>$url], 200);
 
-   } catch (\Exception $e) {
-    return response()->json(["message"=>"something"], 500);
-   }
+   
     }
 
 
