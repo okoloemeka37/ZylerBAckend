@@ -25,7 +25,7 @@ function uploadToGitHub($file)
     if ($response->successful()) {
         return $fileName; // Return the file URL
     } else {
-        throw new Exception("Failed to upload file: " . $response->body());
+        throw new \Exception("Failed to upload file: " . $response->body());
     }
 }
 
