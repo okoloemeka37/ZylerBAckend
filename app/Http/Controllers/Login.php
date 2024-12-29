@@ -101,7 +101,7 @@ notification::create([
     }
 
     public function Update(Request $request, $id) {
-      $file= $request->file('image');
+     
         $path = $file->store('uploads', 'public');
      $request->validate([
             'name'=>'required|min:5',
@@ -115,8 +115,11 @@ notification::create([
       
        
         $rt='';
+        if (is_string($request['image'])) {
+            $rt=$request['image'];
+        }else{ $file= $request->file('image');
+            $rt=uploadToGitHub($request->file('image'));}
        
-        $rt=uploadToGitHub($request->file('image'));
            
        
         
