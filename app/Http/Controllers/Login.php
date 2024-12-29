@@ -102,7 +102,7 @@ notification::create([
 
     public function Update(Request $request, $id) {
      
-        $path = $file->store('uploads', 'public');
+        
      $request->validate([
             'name'=>'required|min:5',
             'email'=>'required|email',
