@@ -89,12 +89,10 @@ if (!$product) {
  
         if ($request->hasFile('images')) {
             foreach ($request->file('images') as $file) {
-                if ($file->isValid()) {
+                
                     $rt = uploadToGitHub($file);
                     array_push($url, $rt);
-                } else {
-                    throw new \Exception("Invalid file detected.");
-                }
+              
             }
         } else {
             throw new \Exception("No images uploaded.");
