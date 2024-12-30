@@ -82,23 +82,15 @@ if (!$product) {
             'gender'=>'required|string',
             'tag'=>'required|string',
             'stock'=>'required|numeric',
-            'images.*' => 'required|file|mimes:jpg,jpeg,png,gif|max:2048',
-
+            'images.*'=>'required'
         ]);
-        $url=[];
  
-        if ($request->hasFile('images')) {
-            foreach ($request->file('images') as $file) {
-                
-                    $rt = uploadToGitHub($file);
-                    array_push($url, $rt);
-              
-            }
-        } else {
-            throw new \Exception("No images uploaded.");
-        }
     
-   
+    $url=[];
+            foreach ($request->file('images') as $file) {
+       $rt=uploadToGitHub($file);
+          array_push($url,$rt); // Return the file URL     
+       }
    $implUrl=implode(',',$url);
        Product::create([
         'name'=>$request['name'],
