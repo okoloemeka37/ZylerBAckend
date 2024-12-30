@@ -13,10 +13,12 @@ use Illuminate\Support\Str;
 function uploadToGitHub($file)
 {
     $fileName = Str::uuid() . '.' . $file->getClientOriginalExtension();
+   
     $fileContent = base64_encode(file_get_contents($file->getRealPath()));
+    $githubFolder = rtrim(env('GITHUB_FOLDER'), '/');
 
     $response = Http::withToken(env('GITHUB_TOKEN'))
-        ->put("https://api.github.com/repos/" . env('GITHUB_REPO') . "/contents/" . env('GITHUB_FOLDER') . "/$fileName", [
+        ->put("https://api.github.com/repos/" . env('GITHUB_REPO') . "/contents/" . $githubFolder . "/$fileName", [
             'message' => "Add $fileName",
             'content' => $fileContent,
             'branch' => env('GITHUB_BRANCH'),
@@ -75,20 +77,30 @@ if (!$product) {
      $request->validate([
             'name'=>"required",
             'Description'=>'required',
-            'price'=>"required|numeric",
+            'price'=>'required|regex:/^\d+(\.\d{1,2})?$/',
             'category'=>'required|string',
             'gender'=>'required|string',
             'tag'=>'required|string',
             'stock'=>'required|numeric',
-            'images.*'=>'required'
-        ]); 
+            'images.*' => 'required|file|mimes:jpg,jpeg,png,gif|max:2048',
 
+        ]);
+        $url=[];
+ 
+        if ($request->hasFile('images')) {
+            foreach ($request->file('images') as $file) {
+                if ($file->isValid()) {
+                    $rt = uploadToGitHub($file);
+                    array_push($url, $rt);
+                } else {
+                    throw new \Exception("Invalid file detected.");
+                }
+            }
+        } else {
+            throw new \Exception("No images uploaded.");
+        }
     
-    $url=[];
-       foreach ($request->file('images') as $file) {    
-       $rt=uploadToGitHub($file);
-          array_push($url,$rt); // Return the file URL     
-       }
+   
    $implUrl=implode(',',$url);
        Product::create([
         'name'=>$request['name'],
