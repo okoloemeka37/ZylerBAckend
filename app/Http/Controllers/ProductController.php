@@ -15,13 +15,13 @@ function uploadToGitHub($file)
     $fileName = Str::uuid() . '.' . $file->getClientOriginalExtension();
    
     $fileContent = base64_encode(file_get_contents($file->getRealPath()));
-    $githubFolder = rtrim(env('GITHUB_FOLDER'), '/');
+    
 
     $response = Http::withToken(env('GITHUB_TOKEN'))
-        ->put("https://api.github.com/repos/" . env('GITHUB_REPO') . "/contents/" . $githubFolder . "/$fileName", [
+        ->put("https://api.github.com/repos/" . env('GITHUB_REPO') . "/contents/" .env('GITHUB_FOLDER') . "/$fileName", [
             'message' => "Add $fileName",
             'content' => $fileContent,
-            'branch' => env('GITHUB_BRANCH'),
+            'branch' => 'main',
         ]);
 
     if ($response->successful()) {
