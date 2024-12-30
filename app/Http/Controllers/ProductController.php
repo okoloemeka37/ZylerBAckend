@@ -102,7 +102,7 @@ if (!$product) {
         'stock'=>$request['stock'],
         'image'=>$implUrl
     ]); 
-    return response()->json(['message'=>"Product Added",'uploadfiles'=>$url], 200);
+    return response()->json(['message'=>"Product Added",'uploadfiles'=>$request->file('images')], 200);
 
    
     }
