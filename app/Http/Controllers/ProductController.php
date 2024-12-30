@@ -75,13 +75,13 @@ if (!$product) {
 
     public function store(Request $request){
      $request->validate([
-            'name'=>"required",
+           /*  'name'=>"required",
             'Description'=>'required',
             'price'=>'required|regex:/^\d+(\.\d{1,2})?$/',
             'category'=>'required|string',
             'gender'=>'required|string',
             'tag'=>'required|string',
-            'stock'=>'required|numeric',
+            'stock'=>'required|numeric', */
             'images.*'=>'required'
         ]);
  
@@ -91,6 +91,9 @@ if (!$product) {
        $rt=uploadToGitHub($file);
           array_push($url,$rt); // Return the file URL     
        }
+
+       return response()->json(['message'=>"Product Added",'uploadfiles'=>$request['images.*']], 200);
+
    $implUrl=implode(',',$url);
        Product::create([
         'name'=>$request['name'],
@@ -102,7 +105,6 @@ if (!$product) {
         'stock'=>$request['stock'],
         'image'=>$implUrl
     ]); 
-    return response()->json(['message'=>"Product Added",'uploadfiles'=>$request->file('images')], 200);
 
    
     }
