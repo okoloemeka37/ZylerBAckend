@@ -92,7 +92,7 @@ if (!$product) {
           array_push($url,$rt); // Return the file URL     
        }
 
-       return response()->json(['message'=>"Product Added",'uploadfiles'=>$request['images.*']], 200);
+       return response()->json(['message'=>"Product Added",'uploadfiles'=>$request['images[]']], 200);
 
    $implUrl=implode(',',$url);
        Product::create([
