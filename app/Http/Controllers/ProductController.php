@@ -88,12 +88,12 @@ if (!$product) {
     
     $url=[];
             foreach ($request->file('images') as $file) {
-                 return response()->json(['message'=>"Product Added",'uploadfiles'=>$file], 200);
        $rt=uploadToGitHub($file);
-          array_push($url,$rt); // Return the file URL     
+          array_push($url,$file); // Return the file URL     
        }
 
-       
+       return response()->json(['message'=>"Product Added",'uploadfiles'=>$url], 800);
+
 
    $implUrl=implode(',',$url);
        Product::create([
