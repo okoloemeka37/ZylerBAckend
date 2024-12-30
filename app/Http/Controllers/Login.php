@@ -20,7 +20,7 @@ function uploadToGitHub($file)
         ->put("https://api.github.com/repos/" . env('GITHUB_REPO') . "/contents/" . env('GITHUB_FOLDER') . "/$fileName", [
             'message' => "Add $fileName",
             'content' => $fileContent,
-            'branch' => env('GITHUB_BRANCH'),
+            'branch' =>'main',
         ]);
 
     if ($response->successful()) {
