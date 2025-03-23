@@ -8,6 +8,7 @@ use App\Models\User;
 use App\Models\notification;
 use App\Models\PasswordReset;
 use App\Mail\PassResetMail;
+use App\Mail\WelcomeUserMail;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
@@ -58,7 +59,7 @@ class Login extends Controller
         'email'=>'required|email|unique:users,email',
         'password'=>'required|min:8|confirmed',
         'address'=>'required',
-        'phone'=>'required|integer'
+        'phone'=>'required|phone:NG'
     ]);
 
     try {
@@ -84,6 +85,9 @@ notification::create([
     'type'=>'User',
     'view'=>'no'
   ]);
+//welcome mail
+$data=['name'=>$request['name']];
+  Mail::to($request['email'])->send(new WelcomeUserMail($data));
 
         return response()->json(['token' => $token,'user'=>$user]);
     }
@@ -172,7 +176,8 @@ return response()->json(['message'=>'Password Changed Successfully',], 200);
     }
 
     public function logout(Request $request){
-        $request->user()->tokens()->delete();
+        $request->user()->tokens()->delete(); 
+       
         return response()->json(['message' => 'Logged out from all devices'], 200);
     }
 
@@ -182,6 +187,7 @@ return response()->json(['message'=>'Password Changed Successfully',], 200);
             'email'=>'required|email'
         ]);
         
+        //check if reset code exist
         if (PasswordReset::where('email',$request->email)->exists()) {
             PasswordReset::where('email',$request->email)->delete();
         }

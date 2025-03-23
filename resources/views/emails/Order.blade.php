@@ -91,7 +91,7 @@
   
       <!-- Content Section -->
       <div class="content">
-        <h2>Thank you for your purchase, <strong><?php echo htmlspecialchars($_POST['customer_name'] ?? 'Customer'); ?></strong>!</h2>
+        <h2>Thank you for your purchase, <strong>{{$data['name']}}</strong>!</h2>
         <p>Your order has been received and is being processed. Below is a summary of the items you ordered:</p>
   
         <!-- Order Summary -->

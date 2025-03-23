@@ -68,17 +68,17 @@
 
       <!-- Body -->
       <div class="email-body">
-        <h2>Dear [name],</h2>
+        <h2>Dear {{$data['name']}},</h2>
         <p>We are pleased to inform you that your payment has been successfully received. Below are the payment details:</p>
-        <p><strong>Amount Paid:</strong> $[sub+del]</p>
-        <p><strong>Payment Date:</strong>{\Carbon\Carbon::now() }</p>
+        <p><strong>Amount Paid:</strong> {{$data['sub']+$data['del']}}</p>
+        <p><strong>Payment Date:</strong>{{\Carbon\Carbon::now() }}</p>
         <p>If you have any questions regarding your payment, please feel free to <a href="#">contact us</a>.</p>
         <p>Thank you for your trust and support!</p>
       </div>
 
       <!-- Footer -->
       <div class="email-footer">
-        <p>&copy; Still Searching | <a href="#">Visit our website</a></p>
+        <p>{{date('Y')}} &copy; Still Searching | <a href="#">Visit our website</a></p>
       </div>
     </div>
   </div>

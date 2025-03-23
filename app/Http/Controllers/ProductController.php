@@ -7,6 +7,7 @@ use App\Models\State;
 use App\Models\Order;
 use App\Models\User;
 use App\Models\Wishlist;
+use App\Models\Payment;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
 
@@ -22,7 +23,7 @@ function uploadToGitHub($file)
             'message' => "Add $fileName",
             'content' => $fileContent,
             'branch' => 'main',
-        ]);
+    ]);
 
     if ($response->successful()) {
         return $fileName; // Return the file URL
@@ -37,9 +38,10 @@ class ProductController extends Controller
     public function getSum() {
         $product=Product::orderBy('id','desc')->limit(1)->get('id');
         $order=Order::orderBy('order_id','desc')->limit(1)->get('order_id');
-        $user=User::orderBy('id','desc')->limit(1)->get('id');
+        $user=User::where('status','!=','Admin')->orderBy('id','desc')->limit(1)->get('id');
+        $revenue=Payment::sum('Amount');
 
-        return response()->json([$product,$order,$user], 200);
+        return response()->json([$product,$order,$user,$revenue], 200);
     }
 
 
@@ -74,7 +76,7 @@ if (!$product) {
     }
 
     public function store(Request $request){
-     $request->validate([
+    $request->validate([
             'name'=>"required",
             'Description'=>'required',
             'price'=>'required|regex:/^\d+(\.\d{1,2})?$/',
@@ -83,16 +85,19 @@ if (!$product) {
             'tag'=>'required|string',
             'stock'=>'required|numeric',
             'images.*' => 'required',
-
         ]);
- 
+  
+  $other='';
+        if ($request['dynamicField']) {
+          $other=$request['dynamicField'];
+        }
     
-    $url=[];
+     $url=[];
             foreach ($request->file('images') as $file) {
        $rt=uploadToGitHub($file);
           array_push($url,$rt); // Return the file URL     
        }
-   $implUrl=implode(',',$url);
+  $implUrl=implode(',',$url);
        Product::create([
         'name'=>$request['name'],
         'Description'=>$request['Description'],
@@ -101,10 +106,11 @@ if (!$product) {
         'category'=>$request['category'],
         'gender'=>$request['gender'],
         'stock'=>$request['stock'],
-        'image'=>$implUrl
-    ]); 
+        'image'=>$implUrl,
+        'dynamicField'=>$other
+    ]);  
     return response()->json(['message'=>"Product Added",'uploadfiles'=>$url], 200);
-
+ 
    
     }
 
@@ -112,6 +118,7 @@ if (!$product) {
 
 
     function update(Request $request, $id) {
+        var_dump($request['removedImage']);
         $request->validate([
             'name'=>"required",
             'Description'=>'required',
@@ -124,8 +131,8 @@ if (!$product) {
         try {
          $product=Product::find($id);
 
-
-         $product->update([
+              
+       /*   $product->update([
             'name'=>$request['name'],
             'Description'=>$request['Description'],
             'price'=>$request['price'],
@@ -133,12 +140,12 @@ if (!$product) {
             'category'=>$request['category'],
             'gender'=>$request['gender'],
             'stock'=>$request['stock']
-         ]);
+         ]); */
 
-        return response()->json(['message'=>"Product Updated Successfully"], 200);
+       // return response()->json(['message'=>"Product Updated Successfully"], 200);
 
         } catch (\Exception $e) {
-       return response()->json(["message"=>"Something Went Wrong"], 500);
+      // return response()->json(["message"=>"Something Went Wrong"], 500);
         }
     }
 

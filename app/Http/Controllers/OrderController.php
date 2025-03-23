@@ -10,7 +10,7 @@ use App\Models\Product;
 use App\Mail\OrderMail;
 use App\Mail\PaymentUserMail;
 use App\Mail\AdminConfirmMail;
-
+use App\Models\Cart;
 use App\Models\notification;
 use App\Models\Payment;
 use Illuminate\Support\Facades\Mail;
@@ -64,9 +64,9 @@ class OrderController extends Controller
         
         
         
-        Mail::to('okoloemeka47@gmail.com')->send(new OrderMail($rg));
+        Mail::to(auth::user()->email)->send(new OrderMail($rg));
 
-        Mail::to('okoloemeka47@gmail.com')->send(new PaymentUserMail($rg));
+        Mail::to(auth::user()->email)->send(new PaymentUserMail($rg));
 
         Mail::to('okoloemeka47@gmail.com')->send(new AdminConfirmMail($rg));
         

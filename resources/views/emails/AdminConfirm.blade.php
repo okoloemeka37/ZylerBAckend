@@ -91,9 +91,9 @@
 
         <!-- Payment Details -->
         <p><strong>Payment Details:</strong></p>
-        <p><strong>Customer Name:</strong> [name]</p>
-        <p><strong>Amount Paid:</strong> $[sub+del]</p>
-        <p><strong>Payment Date:</strong> {\Carbon\Carbon::now() }</p>
+        <p><strong>Customer Name:</strong> {{$data['name']}}</p>
+        <p><strong>Amount Paid:</strong> {{$data['sub']+$data['del']}}</p>
+        <p><strong>Payment Date:</strong> {{\Carbon\Carbon::now() }}</p>
         
         <!-- Order Details -->
         <div class="order-summary">

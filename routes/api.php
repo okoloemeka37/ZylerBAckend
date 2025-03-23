@@ -49,8 +49,20 @@ Route::get("/getRelated/{cat}/{id}",[ProductController::class, 'relatedPro']);
 Route::get("/ViewProduct/{id}",[ProductController::class, 'show']);
 
 
+//getting sellers
+Route::get("/getSellers/{id}",[UserController::class, 'getSellers']);
+
+
+
 
 Route::middleware('auth:sanctum')->group(function (){
+//add reviews and rating
+Route::post("/addReview",[UserController::class,"addReview"]);
+
+//Editing Review
+Route::put("/EditRating/{id}",[UserController::class,"EditRating"]);
+//Deleting Review
+Route::post("/DeleteReview",[UserController::class,'DeleteReview']);
 
 //edit user
 Route::post('/Update{id}', [Login::class, 'Update']);
@@ -69,7 +81,7 @@ Route::get('/Edit', [Login::class, 'Edit']);
 Route::put("/UpdateProduct/{id}",[ProductController::class, 'Update']);
 
 Route::delete("/DeleteProduct/{id}",[ProductController::class, 'destroy']);
-  
+Route::post("/DeleteUser",[UserController::class, 'deleteUser']);
 
 Route::get("/setCat/{type}",[ProductController::class, 'setCat']);
 
@@ -122,11 +134,4 @@ Route::post('/lifeSearch',[ProductController::class,'lifeSearch']);
 
 //payment
 
-Route::post('/pay', [App\Http\Controllers\PaymentController::class, 'redirectToGateway']);
-
-
-Route::get('/payment/callback', [App\Http\Controllers\PaymentController::class, 'handleGatewayCallback']);
-
-
-Route::post('/payment/initialize', [PaymentController::class, 'initializePayment']);
-Route::get('/payment/verify/{reference}', [PaymentController::class, 'verifyPayment']);
+Route::get('/retrieveRevenue/{start}/{end}', [PaymentController::class, 'retrieve']);

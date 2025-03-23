@@ -23,6 +23,7 @@ return new class extends Migration
             $table->string("gender");
             $table->integer("stock");
             $table->string("image");
+            $table->string("dynamicField")->nullable();
             $table->timestamps();
         });
     }
