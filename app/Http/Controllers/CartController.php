@@ -66,10 +66,10 @@ return response()->json(['message'=>'Product Added To Cart Successfully','user'=
             $check=Cart::where('user_id','=',Auth::user()->id)->get();
             
             $user = Auth::user();
-
             $user->load('orders');
             $user->load('carts');
-     
+            $user->load('products');
+            $user->load('review');
             return response()->json(['message'=>'Product Removed Successfully','user'=>$user,'cart'=>$check], 200);
     }
 }

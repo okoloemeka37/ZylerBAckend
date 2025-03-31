@@ -56,6 +56,10 @@ Route::get("/getSellers/{id}",[UserController::class, 'getSellers']);
 
 
 Route::middleware('auth:sanctum')->group(function (){
+
+    //get sellers product;
+    Route::get("/getSellerProduct/{id}",[ProductController::class, 'getSellerProduct']);
+
 //add reviews and rating
 Route::post("/addReview",[UserController::class,"addReview"]);
 

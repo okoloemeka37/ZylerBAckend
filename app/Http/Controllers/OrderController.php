@@ -61,7 +61,12 @@ class OrderController extends Controller
         $user->load('orders');
         $user->load('carts');
       
-        
+
+       $owners= Product::wherein('id',$pr)->pluck('user_id');
+       $owner=User::wherein('id',$owners)->get();
+       foreach ($owner as $ow) {
+        Mail::to($ow['email'])->send(new AdminConfirmMail($rg));
+       }
         
         
         Mail::to(auth::user()->email)->send(new OrderMail($rg));

@@ -17,6 +17,7 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->text('Description');
+            $table->integer('user_id');
             $table->integer('price');
             $table->string('tag');
             $table->string("category");

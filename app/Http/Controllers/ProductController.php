@@ -93,12 +93,16 @@ if (!$product) {
         }
     
      $url=[];
+     if ($request->file('images') == null) {
+        return response()->json(['message'=>"Please Upload Image",'status'=>400],400);
+     }
             foreach ($request->file('images') as $file) {
        $rt=uploadToGitHub($file);
           array_push($url,$rt); // Return the file URL     
        }
   $implUrl=implode(',',$url);
        Product::create([
+        'user_id'=>$request['user_id'],
         'name'=>$request['name'],
         'Description'=>$request['Description'],
         'price'=>$request['price'],
@@ -153,8 +157,14 @@ if (!$product) {
 
     function destroy($id){
         $item = Product::find($id);
-        $item->delete();
-        return response()->json(["message"=>"Product Deleted Succesfully"], 200);
+        if ($item['user_id']!==auth()->user()->id) {
+            return response()->json(["message"=>"You are not authorized to delete this product",'status'=>401]);
+        }else{
+            $item->delete();
+            $product=Product::where('user_id','=',auth()->user()->id)->orderby('id','DESC')->get();
+        return response()->json(["message"=>"Product Deleted Succesfully",'product'=>$product,'status'=>200]);
+        }
+        
     }
 
 
@@ -195,6 +205,12 @@ return response()->json(['data'=>$red], 200);
                     ->orWhere('description','like','%'.$request['search'].'%')
                     ->orWhere('tag','like','%'.$request['search'].'%')->orderBy('id','desc')->get();
 return response()->json($search, 200);
+   }
+
+
+   public function getSellerProduct($id){
+    $product=Product::where('user_id','=',$id)->orderby('id','DESC')->get();
+    return response()->json(['product'=>$product,'status'=>200]);
    }
    
 }

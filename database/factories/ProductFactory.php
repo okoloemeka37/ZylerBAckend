@@ -19,6 +19,7 @@ class ProductFactory extends Factory
     {
         
         return [
+            'user_id'=>1,
             'name' => fake()->name(),
             'Description'=>fake()->sentence,
             'price'=>fake()->randomFloat(2,5,500),
@@ -26,7 +27,7 @@ class ProductFactory extends Factory
             'gender'=>fake()->randomElement(['Male','Female','Unisex','Babies']),
             'tag'=>fake()->randomElement(["Hats","Scarves","Belts","Bags","Jewelry"]),
             'category'=>'Accessories',
-            'image'=>'0900c624-bc52-4f44-9ec5-f2c42c24caa6.jpg'
+            'image'=>fake()->randomElement(['071e9d15-35c8-492f-a267-1df1fdda3721.jpeg','0a86b3be-5a90-49eb-95b7-e2013f27e766.jpeg','0b3d2697-807a-46f8-88d2-dbda89a589ef.jpg'])
         ];
     }
 //php artisan db:seed --class=DatabaseSeeder

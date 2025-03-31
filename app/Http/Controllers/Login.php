@@ -41,9 +41,11 @@ class Login extends Controller
 
         if (Auth::attempt($request->only('email', 'password'))) {
             $user = Auth::user();
-
+            
             $user->load('orders');
             $user->load('carts');
+            $user->load('products');
+            $user->load('review');
             $token = $user->createToken('zyler')->plainTextToken;
 
             return response()->json(['token' => $token,'user'=>$user]);
@@ -67,9 +69,9 @@ class Login extends Controller
         'name'=>$request['name'],
         'email'=>$request['email'],
         'password'=>Hash::make($request['password']),
-        'status'=>'user',
+        'status'=>'Seller',
         'address'=>$request['address'],
-        'phone'=>$request['phone'],
+        'phone'=>trim($request['phone']),
         'image'=>'05785d1e-eefc-47ed-9c3a-d6d3f127c4bd.jfif'
     ]);
 
