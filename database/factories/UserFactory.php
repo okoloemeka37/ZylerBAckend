@@ -24,10 +24,10 @@ class UserFactory extends Factory
             'email_verified_at' => now(),
             'password' =>Hash::make('password'), // password
             'remember_token' => Str::random(10),
-            'status'=>'user',
+            'status'=>'Seller',
             'address'=>fake()->address(),
             'phone'=>12345689101,
-            'image'=>'0900c624-bc52-4f44-9ec5-f2c42c24caa6.jpg'
+            'image'=>'0a86b3be-5a90-49eb-95b7-e2013f27e766.jpeg'
         ];
     }
 

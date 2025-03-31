@@ -102,6 +102,10 @@ notification::create([
       $orders=Order::orderby('order_id','desc')->get();
       return response()->json($orders, 200);
     }
+    public function Sellerorders($id)  {
+      $orders=Order::where('user_id','=',$id)->orderby('order_id','desc')->get();
+      return response()->json($orders, 200);
+    }
 
     //get one order
     public function orderGet($id)  {

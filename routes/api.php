@@ -117,6 +117,8 @@ Route::post("/AddOrder/{ref}/{tran}",[OrderController::class,'add']);
 
 Route::get("/ordersAll",[OrderController::class,'ordersAll']);
 
+Route::get("/Sellerorders/{id}",[OrderController::class,'Sellerorders']);
+
 
 //get one order
 Route::get("/orderGet{id}",[OrderController::class,'orderGet']);

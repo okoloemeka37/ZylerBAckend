@@ -18,7 +18,7 @@ return [
     'paths' => ['api/*', 'sanctum/csrf-cookie'],
 
     'allowed_methods' => ['*'],
-
+//'http://localhost:3000'
     'allowed_origins' => ['https://zylerfrontend.onrender.com'],
 
     'allowed_origins_patterns' => [],
